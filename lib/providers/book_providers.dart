@@ -32,7 +32,7 @@ class BooksState {
     List<Book>? books,
     bool? isLoading,
     SortBy? sortBy,
-    Book? selectedBook, // pass null to clear selection
+    Book? selectedBook, 
   }) {
     return BooksState(
       books: books ?? this.books,
@@ -51,47 +51,47 @@ final booksNotifierProvider =
   return BooksNotifier(ref);
 });
 
-/// Notifier that acts like a Cubit/Bloc
+/// Notifier 
 class BooksNotifier extends StateNotifier<BooksState> {
   final Ref ref;
   BooksNotifier(this.ref) : super(BooksState.initial()) {
     init();
   }
 
-  /// Emulates the init() function of a cubit/bloc: seeds and loads the list
+  /// init() function
   Future<void> init() async {
     state = state.copyWith(isLoading: true);
     final service = ref.read(bookServiceProvider);
 
-    // Seed with a set of books (homework asked to fill in books in init())
+    // Seed with a set of books
     await service.seedBooks([
       Book(
         id: '1',
-        title: '1984',
-        author: 'George Orwell',
-        description: 'Dystopian novel about surveillance and totalitarianism.',
-        imageUrl: '', // optionally use asset or network link
+        title: 'Carmilla Grit',
+        author: 'Susan Dene Herbers',
+        imageUrl: 'assets/charmer.png',
+        description: 'A dark tale of courage and discovery in a mythical world.',
       ),
       Book(
         id: '2',
-        title: 'Brave New World',
-        author: 'Aldous Huxley',
-        description: 'Dystopian novel exploring conditioning and control.',
-        imageUrl: '',
+        title: 'little gods',
+        author: 'Meng Jin',
+        imageUrl: 'assets/littleGods.png',
+        description: 'An expansive and intimate novel exploring motherhood, migration, and the Chinese diaspora.',
       ),
       Book(
         id: '3',
-        title: 'Sapiens',
-        author: 'Yuval Noah Harari',
-        description: 'A brief history of humankind.',
-        imageUrl: '',
+        title: 'A Clockwork Orange',
+        author: 'Anthony Burgess',
+        imageUrl: 'assets/clockwork.png',
+        description: 'A disturbing yet thought-provoking look at the nature of morality and free will.',
       ),
       Book(
         id: '4',
-        title: 'Clean Code',
-        author: 'Robert C. Martin',
-        description: 'A handbook of agile software craftsmanship.',
-        imageUrl: '',
+        title: 'The Memory of Water',
+        author: 'Emmi Itäranta',
+        imageUrl: 'assets/memory.png',
+        description: 'In a world ravaged by environmental disaster, a young woman guards a dangerous secret.',
       ),
     ]);
 
@@ -113,7 +113,7 @@ class BooksNotifier extends StateNotifier<BooksState> {
 
   /// Change sort option and re-emit sorted list
   Future<void> setSortBy(SortBy newSort) async {
-    if (newSort == state.sortBy) return; // nothing to do
+    if (newSort == state.sortBy) return; 
     state = state.copyWith(isLoading: true);
     final sorted = _sortList(state.books, newSort);
     // emulate a small processing delay to show the shimmer/wait behavior if desired
@@ -130,6 +130,4 @@ class BooksNotifier extends StateNotifier<BooksState> {
   void backToList() {
     state = state.copyWith(selectedBook: null);
   }
-
-  // NOTE: addBook and deleteBook methods removed as per request.
 }

@@ -10,7 +10,7 @@ class BookImageWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (book.imageUrl.isNotEmpty) {
-      return Image.network(
+      return Image.asset(
         book.imageUrl,
         width: size,
         height: size,

@@ -20,7 +20,6 @@ class BookDetailPage extends ConsumerWidget {
         leading: IconButton(
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
-            // Tell the notifier to emit list-visible state, as homework requested
             notifier.backToList();
             Navigator.of(context).pop();
           },
@@ -41,10 +40,8 @@ class BookDetailPage extends ConsumerWidget {
             const Spacer(),
             Row(
               children: [
-                // Delete button removed
                 ElevatedButton.icon(
                   onPressed: () {
-                    // Back to list only
                     notifier.backToList();
                     Navigator.of(context).pop();
                   },

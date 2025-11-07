@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/book_providers.dart';
 import '../widgets/book_card_widget.dart';
-import '../models/book.dart';
 import 'book_detail_page.dart';
 
 class HomePage extends ConsumerWidget {
@@ -13,8 +12,7 @@ class HomePage extends ConsumerWidget {
     final state = ref.watch(booksNotifierProvider);
     final notifier = ref.read(booksNotifierProvider.notifier);
 
-    // Helper to build a styled sort button
-    Widget _buildSortButton(SortBy sortValue, String label) {
+    Widget buildSortButton(SortBy sortValue, String label) {
       final isSelected = state.sortBy == sortValue;
       return Padding(
         padding: const EdgeInsets.only(right: 8.0),
@@ -39,7 +37,6 @@ class HomePage extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Book Club'),
-        // actions: [ PopupMenuButton... ] // Removed the old sorting widget
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -50,12 +47,11 @@ class HomePage extends ConsumerWidget {
               children: [
                 const Text('Sort by', style: TextStyle(fontSize: 16)),
                 const SizedBox(width: 12),
-                _buildSortButton(SortBy.author, 'Author'),
-                _buildSortButton(SortBy.title, 'Title'),
+                buildSortButton(SortBy.author, 'Author'),
+                buildSortButton(SortBy.title, 'Title'),
               ],
             ),
           ),
-          // Heading for the book list
           const Padding(
             padding: EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 4.0),
             child: Text(
@@ -90,7 +86,6 @@ class HomePage extends ConsumerWidget {
           ),
         ],
       ),
-      // floatingActionButton removed in previous step
     );
   }
 }

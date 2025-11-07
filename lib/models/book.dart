@@ -3,7 +3,7 @@ class Book {
   final String title;
   final String author;
   final String description;
-  final String imageUrl; // could be local asset or network url
+  final String imageUrl;
 
   const Book({
     required this.id,
