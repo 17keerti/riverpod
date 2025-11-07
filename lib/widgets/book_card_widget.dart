@@ -6,8 +6,8 @@ import 'book_image_widget.dart';
 class BookCardWidget extends StatelessWidget {
   final Book book;
   final VoidCallback? onTap;
-  final VoidCallback? onDelete;
-  const BookCardWidget({super.key, required this.book, this.onTap, this.onDelete});
+  // final VoidCallback? onDelete; // Removed
+  const BookCardWidget({super.key, required this.book, this.onTap}); // Updated constructor
 
   @override
   Widget build(BuildContext context) {
@@ -19,10 +19,7 @@ class BookCardWidget extends StatelessWidget {
         title: Text(book.title),
         subtitle: Text(book.author),
         isThreeLine: book.description.isNotEmpty,
-        trailing: IconButton(
-          icon: const Icon(Icons.delete),
-          onPressed: onDelete,
-        ),
+        // Trailing delete button removed
       ),
     );
   }

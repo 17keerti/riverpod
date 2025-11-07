@@ -19,13 +19,5 @@ class BookService {
     }
   }
 
-  Future<void> addBook(Book book) async {
-    await Future.delayed(const Duration(milliseconds: 200));
-    _books.add(book);
-  }
-
-  Future<void> deleteBook(String id) async {
-    await Future.delayed(const Duration(milliseconds: 200));
-    _books.removeWhere((b) => b.id == id);
-  }
+  // NOTE: addBook and deleteBook methods removed as per request.
 }

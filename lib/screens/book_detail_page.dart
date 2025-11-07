@@ -41,18 +41,7 @@ class BookDetailPage extends ConsumerWidget {
             const Spacer(),
             Row(
               children: [
-                ElevatedButton.icon(
-                  onPressed: () {
-                    // example action: delete and go back
-                    ref.read(booksNotifierProvider.notifier).deleteBook(book.id).then((_) {
-                      notifier.backToList();
-                      Navigator.of(context).pop();
-                    });
-                  },
-                  icon: const Icon(Icons.delete),
-                  label: const Text('Delete Book'),
-                ),
-                const SizedBox(width: 12),
+                // Delete button removed
                 ElevatedButton.icon(
                   onPressed: () {
                     // Back to list only

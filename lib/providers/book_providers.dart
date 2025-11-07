@@ -131,23 +131,5 @@ class BooksNotifier extends StateNotifier<BooksState> {
     state = state.copyWith(selectedBook: null);
   }
 
-  /// Add a book (keeps sorted order)
-  Future<void> addBook(Book book) async {
-    state = state.copyWith(isLoading: true);
-    final service = ref.read(bookServiceProvider);
-    await service.addBook(book);
-    final updated = List<Book>.from(state.books)..add(book);
-    final sorted = _sortList(updated, state.sortBy);
-    state = state.copyWith(books: sorted, isLoading: false);
-  }
-
-  /// Delete a book (keeps sorted order)
-  Future<void> deleteBook(String id) async {
-    state = state.copyWith(isLoading: true);
-    final service = ref.read(bookServiceProvider);
-    await service.deleteBook(id);
-    final updated = state.books.where((b) => b.id != id).toList();
-    final sorted = _sortList(updated, state.sortBy);
-    state = state.copyWith(books: sorted, isLoading: false);
-  }
+  // NOTE: addBook and deleteBook methods removed as per request.
 }

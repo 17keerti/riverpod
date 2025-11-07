@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/book_providers.dart';
 import '../widgets/book_card_widget.dart';
-import '../widgets/book_image_widget.dart';
 import '../models/book.dart';
 import 'book_detail_page.dart';
 
@@ -14,66 +13,84 @@ class HomePage extends ConsumerWidget {
     final state = ref.watch(booksNotifierProvider);
     final notifier = ref.read(booksNotifierProvider.notifier);
 
+    // Helper to build a styled sort button
+    Widget _buildSortButton(SortBy sortValue, String label) {
+      final isSelected = state.sortBy == sortValue;
+      return Padding(
+        padding: const EdgeInsets.only(right: 8.0),
+        child: ElevatedButton.icon(
+          onPressed: () => notifier.setSortBy(sortValue),
+          icon: isSelected ? const Icon(Icons.check, size: 16) : const SizedBox.shrink(),
+          label: Text(label),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: isSelected ? Theme.of(context).colorScheme.primary.withOpacity(0.1) : Colors.grey.shade100,
+            foregroundColor: isSelected ? Theme.of(context).colorScheme.primary : Colors.black,
+            elevation: 0,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
+              side: isSelected ? BorderSide(color: Theme.of(context).colorScheme.primary) : BorderSide.none,
+            ),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+          ),
+        ),
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Book Club'),
-        actions: [
-          PopupMenuButton<SortBy>(
-            onSelected: (s) => notifier.setSortBy(s),
-            itemBuilder: (ctx) => [
-              CheckedPopupMenuItem(
-                value: SortBy.author,
-                checked: state.sortBy == SortBy.author,
-                child: const Text('Sort by Author'),
-              ),
-              CheckedPopupMenuItem(
-                value: SortBy.title,
-                checked: state.sortBy == SortBy.title,
-                child: const Text('Sort by Title'),
-              ),
-            ],
-            icon: const Icon(Icons.sort),
+        // actions: [ PopupMenuButton... ] // Removed the old sorting widget
+      ),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+            child: Row(
+              children: [
+                const Text('Sort by', style: TextStyle(fontSize: 16)),
+                const SizedBox(width: 12),
+                _buildSortButton(SortBy.author, 'Author'),
+                _buildSortButton(SortBy.title, 'Title'),
+              ],
+            ),
+          ),
+          // Heading for the book list
+          const Padding(
+            padding: EdgeInsets.fromLTRB(16.0, 8.0, 16.0, 4.0),
+            child: Text(
+              'Books',
+              style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+            ),
+          ),
+          Expanded(
+            child: state.isLoading
+                ? const Center(child: CircularProgressIndicator())
+                : state.books.isEmpty
+                    ? const Center(child: Text('No books yet'))
+                    : RefreshIndicator(
+                        onRefresh: () => ref.read(booksNotifierProvider.notifier).init(),
+                        child: ListView.builder(
+                          itemCount: state.books.length,
+                          itemBuilder: (context, index) {
+                            final book = state.books[index];
+                            return BookCardWidget(
+                              book: book,
+                              onTap: () {
+                                notifier.selectBook(book);
+                                // navigate to detail page
+                                Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (_) => BookDetailPage(bookId: book.id),
+                                ));
+                              },
+                            );
+                          },
+                        ),
+                      ),
           ),
         ],
       ),
-      body: state.isLoading
-          ? const Center(child: CircularProgressIndicator())
-          : state.books.isEmpty
-              ? const Center(child: Text('No books yet'))
-              : RefreshIndicator(
-                  onRefresh: () => ref.read(booksNotifierProvider.notifier).init(),
-                  child: ListView.builder(
-                    itemCount: state.books.length,
-                    itemBuilder: (context, index) {
-                      final book = state.books[index];
-                      // use the minimal image widget for a compact view; homework asked for by-author default listing
-                      return BookCardWidget(
-                        book: book,
-                        onTap: () {
-                          notifier.selectBook(book);
-                          // navigate to detail page
-                          Navigator.of(context).push(MaterialPageRoute(
-                            builder: (_) => BookDetailPage(bookId: book.id),
-                          ));
-                        },
-                        onDelete: () => notifier.deleteBook(book.id),
-                      );
-                    },
-                  ),
-                ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () async {
-          // For homework/demo purposes, create a new book with timestamp id
-          final newBook = Book(
-            id: DateTime.now().millisecondsSinceEpoch.toString(),
-            title: 'New Book ${DateTime.now().second}',
-            author: 'Author ${DateTime.now().second}',
-            description: 'Added dynamically',
-          );
-          await notifier.addBook(newBook);
-        },
-        child: const Icon(Icons.add),
-      ),
+      // floatingActionButton removed in previous step
     );
   }
 }
